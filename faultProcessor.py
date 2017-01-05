@@ -43,6 +43,7 @@ def faultProcessor(faultFile, outputFile, currentCounter):
             bigFault = val
             break
     return currentCounter, bigFault
+    #
 
 
 #faultProcessor('faults.flt', 'outs.ou', {})
