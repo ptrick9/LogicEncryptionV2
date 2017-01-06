@@ -5,8 +5,8 @@ from time import sleep
 
 #command = "cmd.exe atalanta-M -S -t c432.pat -P c432.rep -m c432.msk c432.bench"
 command = ['cmd.exe']
-createFaultList = ['atalanta-M', '-F', 'faults.flt', 'c432_2.bench']
-createOutputs = ['hope', '-f', 'faults.flt', '-F', 'outs.ou', '-t', 'test.pat', '-l', 'c432.dict', '-N', '-D', 'c432_2.bench']
+createFaultList = ['atalanta-M', '-F', 'faults.flt', 'c432_3.bench']
+createOutputs = ['hope', '-f', 'faults.flt', '-F', 'outs.ou', '-t', 'test.pat', '-l', 'c432.dict', '-N', '-D', 'c432_3.bench']
 
 proc = subprocess.Popen(createFaultList).wait()
 bitStream('test.pat', 37, 100)
