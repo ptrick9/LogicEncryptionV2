@@ -32,6 +32,13 @@ def encrypt(filename, net):
         nets = net.split(' ')[0].split('->')
         #print(nets)
 
+        inp = False
+        for val in C.inputs:
+            if nets[0] in val:
+                inp = True
+                break
+
+
         i = 0
         while i < len(C.gates):
             if C.gates[i].split(' ')[0] == nets[0]:
@@ -49,9 +56,20 @@ def encrypt(filename, net):
 
             i += 1
 
+        if inp:
+            s = "GGATEK%i = XOR(%s, GPK%i)" % (GATECounter + 1, nets[0], keyCounter + 1)
+            C.gates.insert(0, s)
+
     else:
         nets = net.split(' ')[0]
         #print(nets)
+
+        inp = False
+        for val in C.inputs:
+            if nets in val:
+                inp = True
+                break
+
         i = 0
         while i < len(C.gates):
             if C.gates[i].split(' ')[0] == nets:
@@ -68,6 +86,11 @@ def encrypt(filename, net):
                 C.gates[i] = s
 
             i += 1
+
+        if inp:
+            s = "GGATEK%i = XOR(%s, GPK%i)" % (GATECounter + 1, nets, keyCounter + 1)
+            C.gates.insert(0, s)
+
     #print(C.dump())
     return C.dump()
 
@@ -75,3 +98,4 @@ def encrypt(filename, net):
 
 #encrypt('c432_test.bench', 'GGATE135 /1')
 #encrypt('c432_test.bench', 'GGATE83->GGATE87 /0')
+#encrypt('c432_test.bench', 'GPI4->GGATE94 /1')

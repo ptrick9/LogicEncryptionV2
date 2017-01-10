@@ -37,11 +37,14 @@ def faultProcessor(faultFile, outputFile, currentCounter):
     sorted_counter.reverse()
     #print(sorted_counter[-1])
     bigFault = ''
+    #bigFault = sorted_counter[0]
+    #'''
     for val in sorted_counter:
         #print(val)
-        if '->' in val[0] and 'GPI' not in val[0]:# and 'K' not in val[0]:
+        if '->' in val[0]:# and 'GPI' not in val[0]:# and 'K' not in val[0]:
             bigFault = val
             break
+    #'''
     return currentCounter, bigFault
     #
 
