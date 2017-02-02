@@ -1,4 +1,4 @@
-
+import re
 
 class Circuit:
 
@@ -12,8 +12,31 @@ class Circuit:
         self.outputs = []
         self.gates = []
         self.comments = []
+        self.keyCounter = 0
+        self.GATECounter = 0
+
+    def buildFromFile(self, filename):
+        f = open(filename, 'r')
+        #C = Circuit()
+        #keyCounter = 0
+        #GATECounter = 0
+        #patt = re.compile('\d+')
+        for line in f:
+            self.addLine(line)
+        print(self.keyCounter)
 
     def addLine(self, line):
+        patt = re.compile('\d+')
+        if 'GPK' in line:
+            # print(line)
+            num = int(patt.findall(line)[0])
+            if num > self.keyCounter:
+                self.keyCounter = num
+        if 'GGATEK' in line and 'XOR' in line and 'GPK' in line:
+            num = int(patt.findall(line)[0])
+            if num > self.GATECounter:
+                self.GATECounter = num
+
         if 'INPUT' in line:
             self.inputs.append(line.rstrip())
         elif 'OUTPUT' in line:
