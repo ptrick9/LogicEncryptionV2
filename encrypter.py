@@ -5,26 +5,11 @@ from circuit import *
 
 
 #def encrypt(filename, net):
-def encrypt(C, net):
-    '''f = open(filename, 'r')
-    C = Circuit()
-    keyCounter = 0
-    GATECounter = 0
-    patt = re.compile('\d+')
-    for line in f:
-        if 'GPK' in line:
-            #print(line)
-            num = int(patt.findall(line)[0])
-            if num > keyCounter:
-                keyCounter = num
-        if 'GGATEK' in line and 'XOR' in line and 'GPK' in line:
-            num = int(patt.findall(line)[0])
-            if num > GATECounter:
-                GATECounter = num
-        C.addLine(line)'''
-    #print(C)
+def encrypt(C, net, replacements):
 
-    newInput = 'INPUT(GPK%i)' % (C.keyCounter + 1)
+
+
+    newInput = 'INPUT(keyinput%i)' % (C.keyCounter + 1)
     C.addLine(newInput)
 
     ##print(C.dump())
@@ -44,7 +29,7 @@ def encrypt(C, net):
         while i < len(C.gates):
             if C.gates[i].split(' ')[0] == nets[0]:
                 #print(C.gates[i])
-                s = "GGATEK%i = XOR(%s, GPK%i)" % (C.GATECounter + 1, nets[0], C.keyCounter)
+                s = "GGATEK%i = XOR(%s, keyinput%i)" % (C.GATECounter + 1, nets[0], C.keyCounter)
                 C.gates.insert(i+1, s)
                 i += 1
                 #print(s)
@@ -58,7 +43,7 @@ def encrypt(C, net):
             i += 1
 
         if inp:
-            s = "GGATEK%i = XOR(%s, GPK%i)" % (C.GATECounter + 1, nets[0], C.keyCounter)
+            s = "GGATEK%i = XOR(%s, keyinput%i)" % (C.GATECounter + 1, nets[0], C.keyCounter)
             C.gates.insert(0, s)
 
     else:
@@ -66,16 +51,22 @@ def encrypt(C, net):
         #print(nets)
 
         inp = False
+        outs = False
         for val in C.inputs:
             if nets in val:
                 inp = True
                 break
+        for val in C.outputs:
+            if nets in val:
+                outs = True
+                break
+
 
         i = 0
         while i < len(C.gates):
             if C.gates[i].split(' ')[0] == nets:
                 #print(C.gates[i])
-                s = "GGATEK%i = XOR(%s, GPK%i)" % (C.GATECounter + 1, nets, C.keyCounter)
+                s = "GGATEK%i = XOR(%s, keyinput%i)" % (C.GATECounter + 1, nets, C.keyCounter)
                 C.gates.insert(i+1, s)
                 i += 1
                 ##print(s)
@@ -89,8 +80,21 @@ def encrypt(C, net):
             i += 1
 
         if inp:
-            s = "GGATEK%i = XOR(%s, GPK%i)" % (C.GATECounter + 1, nets, C.keyCounter)
+            s = "GGATEK%i = XOR(%s, keyinput%i)" % (C.GATECounter + 1, nets, C.keyCounter)
             C.gates.insert(0, s)
+        if outs:
+            print('woo boy, we got an output')
+            i = 0
+            replacements['GGATEK%i' % (C.GATECounter + 1)] = nets
+            while i < len(C.outputs):
+                if nets in C.outputs[i]:
+                    C.outputs[i] = 'OUTPUT(GGATEK%i)' % (C.GATECounter + 1)
+                    break
+                i += 1
+
+            print(nets)
+            #s = "GGATEK%i = XOR(%s, GPK%i)" % (C.GATECounter + 1, nets, C.keyCounter)
+            #C.gates.insert(0, s)
     C.GATECounter = C.GATECounter + 1
     #print(C.dump())
     #return C.dump()

@@ -27,7 +27,7 @@ class Circuit:
 
     def addLine(self, line):
         patt = re.compile('\d+')
-        if 'GPK' in line:
+        if 'keyinput' in line:
             # print(line)
             num = int(patt.findall(line)[0])
             if num > self.keyCounter:
@@ -49,6 +49,18 @@ class Circuit:
             pass
         else:
             print("unable to add line correctly")
+
+    def dumpArray(self):
+        c = []
+        for line in self.comments:
+            c.append(line)
+        for line in self.inputs:
+            c.append(line)
+        for line in self.outputs:
+            c.append(line)
+        for line in self.gates:
+            c.append(line)
+        return c
 
     def dump(self):
         c = ""
